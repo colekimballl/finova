@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Conda
+environment.yml
+
+# VS Code
+.vscode/
+
+# Data
+data/live/
+data/*.csv
+
+# Logs
+*.log
+
+# Secrets
+*.secret
+
