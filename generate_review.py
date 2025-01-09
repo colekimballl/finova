@@ -101,13 +101,15 @@ def create_review_file(target_path):
         try:
             with open(filepath, "r", encoding="utf-8") as f:
                 file_content = f.read()
-                content.extend([
-                    "\n" + "=" * 80,
-                    f"# File: {filepath}",
-                    "=" * 80 + "\n",
-                    file_content,
-                    "\n\n",
-                ])
+                content.extend(
+                    [
+                        "\n" + "=" * 80,
+                        f"# File: {filepath}",
+                        "=" * 80 + "\n",
+                        file_content,
+                        "\n\n",
+                    ]
+                )
         except Exception as e:
             print(f"\nError reading {filepath}: {e}")
             content.append(f"# Error reading {filepath}: {e}\n")
@@ -130,7 +132,9 @@ def create_review_file(target_path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate code review file for a specific directory")
+    parser = argparse.ArgumentParser(
+        description="Generate code review file for a specific directory"
+    )
     parser.add_argument("path", help="Path to the directory to review")
     args = parser.parse_args()
 

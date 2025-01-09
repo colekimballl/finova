@@ -1,99 +1,99 @@
+# bollinger_bot.py
 
-import dontshare as d 
-import hyperliquid_functions as n 
+import time
+import schedule
+import pandas as pd
+import pandas_ta as ta
 from eth_account.signers.local import LocalAccount
-import eth_account 
-import json 
-import time 
-from hyperliquid.info import Info 
-from hyperliquid.exchange import Exchange 
-from hyperliquid.utils import constants 
-import ccxt 
-import pandas as pd 
-import datetime 
-import schedule 
-import requests 
+import eth_account
 
-symbol = 'WIF'
-timeframe = '15m'
+import hyperliquid_functions as n
+
+# Configuration
+symbol = "WIF"
+timeframe = "15m"
 sma_window = 20
-lookback_days = 1 
-size = 1 
+lookback_days = 1
+size = 1
 target = 5
 max_loss = -10
 leverage = 3
-max_positions = 1 
+max_positions = 1
 
-secret = d.private_key
+secret = "YOUR_PRIVATE_KEY_HERE"  # Replace with secure key management
 
 def bot():
+    # Initialize account
+    account = eth_account.Account.from_key(secret)
 
-    account1 = LocalAccount = eth_account.Account.from_key(secret)
+    # Get current positions and maximum positions
+    positions, in_pos, pos_size, pos_sym, entry_px, pnl_perc, long = n.get_position_andmaxpos(
+        symbol, account, max_positions
+    )
+    print(f"Current positions for {symbol}: {positions}")
 
-    positions1, im_in_pos, mypos_size, pos_sym1, entry_px1, pnl_perc1, long1, num_of_pos = n.get_position_andmaxpos(symbol, account1, max_positions)
+    # Adjust leverage and calculate position size
+    lev, pos_size = n.adjust_leverage_size_signal(symbol, leverage, account)
+    pos_size /= 2  # Dividing position by 2
 
-    print(f'these are positions for {symbol} {positions1}')
-
-    lev, pos_size = n.adjust_leverage_size_signal(symbol, leverage, account1)
-
-    # dividing position by 2 
-    pos_size = pos_size / 2 
-
-    if im_in_pos:
-        n.cancel_all_orders(account1)
-        print('in position so check pnl close')
-        n.pnl_close(symbol, target, max_loss, account1)
+    if in_pos:
+        n.cancel_all_orders(account)
+        print("In position. Checking PnL to potentially close.")
+        n.pnl_close(symbol, target, max_loss, account)
     else:
-        print('not in position so no pnl close')
+        print("Not in position. No PnL close needed.")
 
-    # get price 
+    # Fetch current ask and bid
     ask, bid, l2_data = n.ask_bid(symbol)
+    if ask is None or bid is None:
+        print("Failed to retrieve ask/bid. Skipping this iteration.")
+        return
 
-    print(f'ask: {ask} bid: {bid}')
+    print(f"Ask: {ask}, Bid: {bid}")
 
-    bid11 = float(l2_data[0][10]['px'])
-    ask11 = float(l2_data[1][10]['px'])
-
-    print(f'ask11: {ask11} bid11: {bid11}')
-
-    snapshot_data = n.get_ohlcv2('BTC', '1m', 500)
+    # Fetch and process OHLCV data
+    snapshot_data = n.get_ohlcv2("BTC", "1m", 500)
     df = n.process_data_to_df(snapshot_data)
-    bbdf = n.calculate_bollinger_bands(df)
-    bollinger_bands_tight = n.calculate_bollinger_bands(df)[1]
+    if df.empty:
+        print("No OHLCV data received. Skipping Bollinger Bands calculation.")
+        return
 
-    print(f'bollinger bands are tight: {bollinger_bands_tight}')
+    _, bollinger_bands_tight, _ = n.calculate_bollinger_bands(df)
+    print(f"Bollinger Bands Tight: {bollinger_bands_tight}")
 
-    # ONLY ENTERS IF BOLLINGER BANDS ARE TIGHT
-    if not im_in_pos and bollinger_bands_tight:
-        print('bollinger bands are tight and we dont have a position so entering')
-        print(f'not in position we are quoteing a sell @ {ask} and buy @ {bid}')
-        # cancel all open orser
-        n.cancel_all_orders(account1)
+    # Trading Logic
+    if not in_pos and bollinger_bands_tight:
+        print("Bollinger Bands are tight and no existing position. Entering new position.")
+        n.cancel_all_orders(account)
+        print("All open orders canceled.")
 
-        print('just canceled all orders')
+        # Place BUY and SELL limit orders
+        bid_price = float(l2_data[0][10]["px"]) if len(l2_data[0]) > 10 else bid
+        ask_price = float(l2_data[1][10]["px"]) if len(l2_data[1]) > 10 else ask
 
-        # ENTER BUY ORDER
-        n.limit_order(symbol, True, pos_size, bid11, False, account1)
-        print(f'just placed an order for {pos_size} at {bid}')
+        n.limit_order(symbol, True, pos_size, bid_price, False, account)
+        print(f"Placed BUY order for {pos_size} at {bid_price}")
 
-        # ENTER SELL ORDER
-        n.limit_order(symbol, False, pos_size, ask11, False, account1)
-        print(f'just placed an order for {pos_size} as {ask}')
+        n.limit_order(symbol, False, pos_size, ask_price, False, account)
+        print(f"Placed SELL order for {pos_size} at {ask_price}")
 
-    elif bollinger_bands_tight == False:
-        n.cancel_all_orders(account1)
-        n.close_all_positions(account1)
+    elif not bollinger_bands_tight:
+        n.cancel_all_orders(account)
+        n.close_all_positions(account)
     else:
-        print(f'our position is {im_in_pos} bollinger bands may not be tight')
+        print(f"Current position status: {in_pos}. Bollinger Bands may not be tight.")
 
-bot()
+# Schedule the bot to run every 30 seconds
 schedule.every(30).seconds.do(bot)
 
-while True:
-    try:
-        schedule.run_pending()
-        time.sleep(10)
-    except Exception as e:
-        print('*** maybe internet connection lost... sleeping 30 and retrying')
-        print(e)
-        time.sleep(30)
+if __name__ == "__main__":
+    bot()  # Initial run
+    while True:
+        try:
+            schedule.run_pending()
+            time.sleep(10)
+        except Exception as e:
+            print("*** Possible internet connection issue. Sleeping for 30 seconds before retrying.")
+            print(e)
+            time.sleep(30)
+

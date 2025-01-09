@@ -1,0 +1,10 @@
+phemex:
+  base_url: https://testnet-api.phemex.com
+hyperliquid:
+  base_url: https://testnet-api.hyperliquid.com
+coinbase:
+  base_url: https://api-public.sandbox.pro.coinbase.com
+  api_key: "93e9869a-f42d-4bb5-8718-68f451c9f925"
+  api_secret: "MHcCAQEEINdaiLk9zbptI63KovdfcTJq+XQnzWd5Vdub3hBf2qcHoAoGCCqGSM49AwEHoUQDQgAE6HBhqPB/v+0r0XXN+Cs6I7P3KDCMRpQgkTIe3hyTLJzn1gOrJU0GmcCb8/1HoyXv3uSqvEDIEaAe9abaScE9Ow=="
+  passphrase: "your_api_passphrase"  # Replace with your actual passphrase
+

@@ -1,1 +1,7 @@
-private_key = "07044931a727f9b78653d576ed653680619c842ce3332e175bbecfd84a29cae4"
+# dontshare.py
+
+import os
+
+# It's recommended to use environment variables for sensitive data
+PRIVATE_KEY = os.getenv("HYPERLIQUID_PRIVATE_KEY", "default_private_key")
+# Add other sensitive configurations as needed
