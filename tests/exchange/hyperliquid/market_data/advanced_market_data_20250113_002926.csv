@@ -1,0 +1,6 @@
+symbol,current_price,volatility,recent_volatility,volume_concentration,predicted_funding,funding_confidence
+BTC,93767.5,0,0,0,0.017499999999999998,Low
+ETH,3204.45,0,0,0,0.017499999999999998,Low
+ADA,0.9388000000000001,0,0,0,0.017499999999999998,Low
+SOL,182.655,0,0,0,0.017499999999999998,Low
+DOGE,0.328795,0,0,0,0.017499999999999998,Low

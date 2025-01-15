@@ -1,0 +1,2 @@
+Strategy,Parameters,Sharpe Ratio,Total Transactions,Total Trades,Won Trades,Lost Trades,Max Drawdown,Total Return,Final Value
+SmaCrossShort,{'sma_period': 10},0.7401476783134234,116,58,23,35,39.35198511343126,1.0845406755928606,2958080.787941186

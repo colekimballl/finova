@@ -1,0 +1,101 @@
+hyperliquid test features & notes:
+
+basic api & balance tests:
+* api connectivity check - uses info.meta() to ping server n verify connection alive
+* account auth - checks api key valid thru user_state call stored in env
+* balance check - queries account value n margin status simple number validation
+* margin access - gets trading power n leverage allowance checks
+
+orderbook & market:
+* l2 data pull - fetches full orderbook depth using direct api call to /info endpoint
+* price check - gets current bid/ask from book validates spread logic
+* market depth - ensures enough orders exist for proper trading
+* validation - basic checks that prices n levels make sense
+
+positions & orders:
+* empty check - verifies fresh account or no positions running
+* position status - current trades sizes entries n pnl quick view  
+* open orders - pending limit orders waiting to fill
+* size check - position size matches expected values n limits
+* pnl view - current profit/loss per position
+
+market info:
+* pairs list - available trading symbols n configs 
+* decimals - precision settings for order sizes n prices
+* base currency - settlement currency usually usd
+* market params - fees limits restrictions etc
+* universe - full trading pairs catalogue 
+
+leverage & settings:
+* leverage limits - max leverage per market
+* position config - cross vs isolated margin etc
+* param check - validates trading rules n limits
+
+todo tests:
+* real orders - skipped for safety
+* live trading - needs test environment
+* websocket - realtime data feeds
+* historical - price history n charts
+* advanced orders - stops trails etc
+* sizing calc - position sizing rules
+* risk checks - max sizes n leverages
+ 
+ 
+ organize into 4 files to test certain marks
+
+1 confest.py
+2 test 1 api and bal
+3 test 2 market data 
+4 test 3 features
+
+key components
+the fixtures, scope is = to the session, and created once per test,  dot env variables for secure cred management, resuable
+
+this in confest.py
+
+@pytest.fixture(scope="session")
+def private_key():
+    """Loads API key from environment"""
+    return os.getenv("HYPERLIQUID_API_SECRET")
+
+@pytest.fixture(scope="session")
+def account(private_key):
+    """Creates account instance"""
+    return Account.from_key(private_key)
+
+@pytest.fixture(scope="session")
+def info():
+    """Creates Info instance for market data"""
+    return Info(constants.MAINNET_API_URL, skip_ws=True)
+
+
+test 1
+
+def test_connection(info):
+    """Verifies API connectivity"""
+    meta = info.meta()
+    assert meta is not None
+
+def test_account_exists(account, info):
+    """Checks account access"""
+    user_state = info.user_state(account.address)
+    assert "marginSummary" in user_state
+
+basic connection validartion and checks 
+
+
+Info Class Methods
+info.meta()               # Get market metadata
+info.user_state()         # Get account state
+info.open_orders()        # Get open orders
+
+Exchange Class Methods
+exchange.update_leverage() # Update leverage settings
+exchange.order()          # Place orders
+exchange.cancel()         # Cancel orders
+
+Direct API Calls
+POST /info               # L2 order book data
+headers = {"Content-Type": "application/json"}
+
+
