@@ -1,2 +1,2 @@
-id = 66f0f1d5-1757-4894-b87e-fbc9103cd990
-api_secret = GihJIBk9SeMfi8kIQXo5CmIygfwKTU8q_BQdj2mjVncyZjQzMGYzNi0yMjg3LTQ4NWYtODUzMy1mNGFjMjYwOGI1ZDY
+
+api_secret = os.getenv("PHEMEX_API_SECRET")

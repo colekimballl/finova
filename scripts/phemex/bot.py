@@ -32,10 +32,7 @@ POS_SIZE = 30.0  # Adjust as per strategy
 VOL_DECIMAL_THRESHOLD = 0.4  # For volume-based decisions
 
 # Initialize Exchange Client
-exchange = PhemexClient(
-    api_key=dontshare.PEMHEPX_API_KEY,
-    api_secret=dontshare.PEMHEPX_API_SECRET
-)
+#fix this
 
 def bot():
     """
