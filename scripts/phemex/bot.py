@@ -15,6 +15,9 @@ from phemex_functions import (
 )
 from risk_management_phemex import RiskParameters, RiskManager
 import dontshare
+import os
+api_key=os.getenv("PHEMEX_API_KEY"),
+api_secret=os.getenv("PHEMEX_API_SECRET")
 
 logger = setup_logger("bot")
 
@@ -31,8 +34,6 @@ LEVERAGE = 3.0
 POS_SIZE = 30.0  # Adjust as per strategy
 VOL_DECIMAL_THRESHOLD = 0.4  # For volume-based decisions
 
-# Initialize Exchange Client
-#fix this
 
 def bot():
     """
