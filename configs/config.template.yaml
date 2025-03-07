@@ -1,0 +1,14 @@
+phemex:
+  api_key: 'your_phemex_api_key_here'
+  api_secret: 'your_phemex_api_secret_here'
+  base_url: https://api.phemex.com
+
+hyperliquid:
+  api_key: 'your_hyperliquid_api_key_here'
+  api_secret: 'your_hyperliquid_api_secret_here'
+  base_url: https://api.hyperliquid.com
+
+coinbase:
+  api_key: 'your_coinbase_api_key_here'
+  api_secret: 'your_coinbase_api_secret_here'
+  passphrase: 'your_coinbase_passphrase_here'

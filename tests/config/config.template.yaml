@@ -1,0 +1,9 @@
+phemex:
+  api_key: 'YOUR_TEST_PHEMEX_API_KEY'
+  api_secret: 'YOUR_TEST_PHEMEX_API_SECRET'
+  base_url: https://api.phemex.com
+
+hyperliquid:
+  api_key: YOUR_TEST_HYPERLIQUID_API_KEY
+  api_secret: YOUR_TEST_HYPERLIQUID_API_SECRET
+  base_url: https://api.hyperliquid.com

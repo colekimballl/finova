@@ -25,3 +25,7 @@ data/*.csv
 # Secrets
 *.secret
 
+# Add these to .gitignore
+tests/config/config.yaml
+tests/config/test_config.yaml
+tests/tests/config/test_config.yaml

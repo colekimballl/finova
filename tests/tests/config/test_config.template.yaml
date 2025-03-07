@@ -1,0 +1,8 @@
+hyperliquid:
+  api_key: test_key_placeholder
+  api_secret: test_secret_placeholder
+  base_url: https://testnet-api.hyperliquid.com
+phemex:
+  api_key: test_key_placeholder
+  api_secret: test_secret_placeholder
+  base_url: https://testnet-api.phemex.com
